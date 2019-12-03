@@ -18,17 +18,23 @@ export class AppComponent {
   canNavigateUp = false;
 
   ngOnInit() {
-    const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
-    this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root' });
-    this.fileService.add({ name: 'Folder C', isFolder: true, parent: folderA.id });
-    this.fileService.add({ name: 'File A', isFolder: false, parent: 'root' });
-    this.fileService.add({ name: 'File B', isFolder: false, parent: 'root' });
+    const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root', path: this.currentPath });
+    const folderB = this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root', path: this.currentPath });
+    this.fileService.add({ name: 'lan.jpeg', isFolder: false, parent: folderB.id, path: this.currentPath });
+    this.fileService.add({ name: 'Folder C', isFolder: true, parent: folderA.id, path: this.currentPath });
+    this.fileService.add({ name: 'File A', isFolder: false, parent: 'root', path: this.currentPath });
+    this.fileService.add({ name: 'File B', isFolder: false, parent: 'root', path: this.currentPath });
 
     this.updateFileElementQuery();
   }
 
   addFolder(folder: { name: string }) {
-    this.fileService.add({ isFolder: true, name: folder.name, parent: this.currentRoot ? this.currentRoot.id : 'root' });
+    this.fileService.add({ isFolder: true, name: folder.name, parent: this.currentRoot ? this.currentRoot.id : 'root' , path: this.currentPath});
+    this.updateFileElementQuery();
+  }
+
+  addFile(folder: { name: string }) {
+    this.fileService.add({ isFolder: true, name: folder.name, parent: this.currentRoot ? this.currentRoot.id : 'root', path: this.currentPath });
     this.updateFileElementQuery();
   }
 
@@ -69,6 +75,7 @@ export class AppComponent {
 
   updateFileElementQuery() {
     this.fileElements = this.fileService.queryInFolder(this.currentRoot ? this.currentRoot.id : 'root');
+    console.log('this.fileElements : ', this.fileElements);
   }
 
   pushToPath(path: string, folderName: string) {
